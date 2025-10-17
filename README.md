@@ -1,70 +1,119 @@
-# Shape Studio
+# Shape Studio v2.0.0
 
-Console app demonstrating **OOP in Java**:  
-abstract classes, interfaces, and polymorphism.
+## Title
+Shape Studio — object-oriented geometry simulator (Java, console-based).  
+Version **2.0.0** integrates all previous concepts: polymorphism, object contracts, static/final, safe input, and utility classes.
+
+---
 
 ## Features
-- Abstract base class `Shape` with `area()` and `perimeter()`
-- Implementations: `Circle`, `Rectangle`, `Triangle`
-- Interface `Printable` with `printInfo()` contract
-- CLI menu for adding figures and viewing calculations
-- Input validation (numeric checks, safe loops)
+- Abstract hierarchy `Shape` (`Circle`, `Rectangle`, `Triangle`);
+- Polymorphic behavior: array of `Shape[]` with dynamic dispatch;
+- Implemented `equals()`, `hashCode()`, `toString()` according to the strict equality policy (`RULES.md`);
+- Added utility class `MathHelper` (constants, rounding, epsilon comparison);
+- Safe CLI input handling with validation loops;
+- One explicit `instanceof + cast` (for `Circle` radius only);
+- Formatted numerical output with rounding for readability.
 
-## Project structure
-```тext
-src/
-└─ org/
-└─ example/
-├─ app/
-│  └─ Main.java
-├─ model/
-│  ├─ Shape.java
-│  ├─ Circle.java
-│  ├─ Rectangle.java
-│  └─ Triangle.java
-└─ spi/
-└─ Printable.java
-```
+---
 
 ## How to Run
 ```bash
-javac -d out src/org/example/**/*.java
-java -cp out org.example.app.Main
+javac -d out src/org/example/*.java
+java -cp out org.example.Main
 ```
 
-## Example session
-```тext
-Welcome to Shape Studio!
-Add first figure for start:
-1 - Circle
-2 - Rectangle
-3 - Triangle
-0 - Exit
-> 1
-New Circle
-Enter radius:
-5
-Figure added.
-What do you want?
-1 - Add figure
-2 - Calculate area
-3 - Calculate perimeter
-4 - Print Info
-0 - Exit
-> 4
-Circle area = 78.53981633974483
-> 0
-See you later!
+---
+
+## Examples
+Example of polymorphic behavior with single `instanceof` usage:
+```java
+Shape[] shapes = {
+new Circle(5),
+new Rectangle(4, 10),
+new Triangle(3, 4, 5)
+};
+
+for (Shape s : shapes) {
+s.printInfo(); // polymorphic call
+if (s instanceof Circle c) {
+System.out.println("Circle radius: " + c.getRadius());
+}
+}
 ```
+
+Example CLI session:
+```text
+=== Shape Studio v2.0 ===
+1) Create Circle
+2) Create Rectangle
+3) Create Triangle
+4) Show All Shapes
+0) Exit
+
+Enter choice: 1
+Enter radius: abc
+Error: enter a valid number
+Enter radius: 10
+Circle added successfully!
+
+Enter choice: 4
+Circle {Radius=10.0, Area=314.16, Perimeter=62.83}
+```
+
+---
 
 ## Acceptance
-- ✅ Abstract class `Shape` and interface `Printable` implemented
-- ✅ Polymorphism via `Shape[]` and interface calls
-- ✅ CLI runs, supports multiple figures
-- ✅ Safe input handling, no crashes on invalid input
+| Checkpoint | Status |
+|-------------|---------|
+| Polymorphism without instanceof chains | ✅ |
+| One instanceof + cast (Circle only) | ✅ |
+| MathHelper integrated (PI, EPS, round, epsilonEqual) | ✅ |
+| CLI input protected | ✅ |
+| Object contracts (equals/hashCode/toString) consistent | ✅ |
+| RULES.md created and applied | ✅ |
+| README updated and accurate | ✅ |
+
+---
 
 ## Notes
-- `super(name)` used to initialize base class field
-- Manual array resizing instead of collections (by design)
-- Validation with `Scanner.hasNextDouble()` loops
-- Uses Heron’s formula for triangle area  
+- All calculations are routed through `MathHelper` to eliminate magic numbers.
+- Floating-point equality and hashing strategies are documented in `RULES.md`.
+- CLI prevents invalid input (no exceptions thrown).
+- `Shape[]` dynamically grows when new figures are added.
+- Rounding applied in `area()` and `perimeter()` for clean output.
+- Full project follows single responsibility per class.
+
+---
+
+## Project Structure
+```text
+src/
+└── org/example/
+├── Shape.java
+├── Circle.java
+├── Rectangle.java
+├── Triangle.java
+├── MathHelper.java
+├── Printable.java
+├── Main.java
+RULES.md
+README.md
+```
+
+---
+
+## Changelog
+
+### v2.0.0 — Integration & Object Contracts
+- Added `MathHelper` (PI, EPS, round, epsilonEqual);
+- Introduced `RULES.md` with equality/hash policy;
+- All Object contracts implemented and verified;
+- Rounded numeric output for consistent CLI display;
+- Safe input loops added to prevent user errors;
+
+---
+
+## Version
+**Release:** v2.0.0  
+

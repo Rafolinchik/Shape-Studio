@@ -96,7 +96,7 @@ public class Main {
             boolean addFigure = false;
             first = false;
             do {
-                System.out.println("What do you whant?\n1 - Add figure\n2 - Calculate area\n3 - Calculate perimeter\n4 - Print Info\n0 - Exit");
+                System.out.println("What do you whant?\n1 - Add figure\n2 - Calculate area\n3 - Calculate perimeter\n4 - Print Info\n5 - Print Circle\n0 - Exit");
                 while (!sc.hasNextInt()) {
                     System.out.println("Error. Enter number 0-4 :");
                     sc.next();
@@ -124,6 +124,13 @@ public class Main {
                             Printable print = (Printable) figures[i];
                             print.printInfo();
                         }
+                    }
+                    case 5 -> {
+                        for (Shape figure : figures)
+                            if(figure instanceof Circle){
+                               System.out.println(figure);
+                            }
+
                     }
                     case 0 -> {
                         isRun = false;
