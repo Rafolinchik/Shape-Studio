@@ -1,18 +1,34 @@
 package org.example.model;
 
-import org.example.util.*;
+import org.example.util.MathHelper;
 
 import org.example.spi.Printable;
 
 public class Rectangle extends Shape implements Printable {
-   public double width;
-   public double height;
+   private double width;
+   private double height;
+   private Color color;
 
-   public Rectangle (double width, double height){
+   public Rectangle (double width, double height, Color color){
         super("Rectangle");
         this.width = width;
         this.height = height;
+        this.color = color;
     }
+
+    class Metrics {
+       double diagonal(){
+           return Math.hypot(width, height);
+       }
+       double aspectRatio(){
+           return  width/height;
+       }
+    }
+
+    Metrics metrics(){
+        return this.new Metrics();
+    }
+
     @Override
    public double area(){
         return MathHelper.round(width * height, 2);
@@ -48,6 +64,6 @@ public class Rectangle extends Shape implements Printable {
     }
     @Override
     public String toString() {
-       return name + " {Width: " + width + " Height: " + height + "}";
+       return name + " {Width: " + width + " Height: " + height + ", color=" + color.getLabel() + "}";
     }
 }

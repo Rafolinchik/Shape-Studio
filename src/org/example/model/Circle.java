@@ -4,10 +4,12 @@ import org.example.spi.Printable;
 import org.example.util.MathHelper;
 
 public class  Circle extends Shape implements Printable {
-   public double radius;
-    public Circle (double radius){
+   private double radius;
+   private Color color;
+    public Circle (double radius, Color color){
         super("Circle");
         this.radius = radius;
+        this.color = color;
     }
     @Override
    public double area() {
@@ -38,6 +40,6 @@ public class  Circle extends Shape implements Printable {
     }
     @Override
     public String toString() {
-        return name + " {Radius: " + radius + "}";
+        return name + " {Radius: " + radius + ", color= "+ color.getLabel() + "}";
     }
 }

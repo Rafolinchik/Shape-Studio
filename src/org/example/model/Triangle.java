@@ -1,19 +1,21 @@
 package org.example.model;
 
-import org.example.util.*;
+import org.example.util.MathHelper;
 
 import org.example.spi.Printable;
 
 public class Triangle extends Shape implements Printable {
-   public double sideA;
-   public double sideB;
-   public double sideC;
+   private double sideA;
+   private double sideB;
+   private double sideC;
+   private Color color;
 
-   public Triangle(double sideA, double sideB, double sideC) {
+   public Triangle(double sideA, double sideB, double sideC, Color color) {
         super("Triangle");
         this.sideA = sideA;
         this.sideB = sideB;
         this.sideC = sideC;
+        this.color = color;
     }
 
     @Override
@@ -54,7 +56,7 @@ public class Triangle extends Shape implements Printable {
     }
     @Override
     public String toString() {
-       return name + " {Side A: " + sideA + " Side B: " + sideB + " Side C: " + sideC + "}";
+       return name + " {Side A: " + sideA + " Side B: " + sideB + " Side C: " + sideC + ", color= "+ color.getLabel() + "}";
     }
 
 }

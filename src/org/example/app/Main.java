@@ -1,19 +1,75 @@
 package org.example.app;
 
-import org.example.spi.*;
-import org.example.model.*;
+
+import org.example.model.Circle;
+import org.example.model.Rectangle;
+import org.example.model.Triangle;
+import org.example.model.Shape;
+import org.example.model.Color;
+
+import org.example.model.DetailLevel;
+
+import org.example.spi.Printable;
 
 import java.util.Scanner;
 
 public class Main {
+    static final class Logger {
+       private Logger () {};
+        public static void info(String msg) {System.out.println("[INFO] " + msg);}
+        public static void warn(String msg) {System.out.println("[WARN] " + msg);}
+        public static void error(String msg) {System.err.println("[ERROR] " + msg);}
+    }
+
+    static void demoLocal(Shape shape){
+        class ShapePrinter implements Printable {
+           Shape s;
+           ShapePrinter(Shape s){this.s = s;}
+            @Override
+            public void printInfo() {System.out.println("Shape -> "+ s.toString());}
+        }
+        new ShapePrinter(shape).printInfo();
+    }
+    static void demoAnonymous(Shape shape){
+        Printable anon = new Printable(){
+            @Override
+            public void printInfo(){
+                System.out.println("Anonymous print -> "+ shape.getName());
+            }
+        };
+        anon.printInfo();
+    }
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         Shape[] figures = new Shape[100];
         int count = 0;
         boolean isRun = true;
         boolean first = true;
-        System.out.println("Welcome to Shape Studio!");
+        DetailLevel levelDetail = null;
+        Logger.info("Welcome to Shape Studio!");
+
         do {
+            System.out.println("Select level detail:");
+            for (DetailLevel d : DetailLevel.values()) {
+                System.out.println(d.getLevel() + " " + d.getLabel());
+            }
+            while (!sc.hasNextInt()) {
+                Logger.error("Enter number:");
+                sc.next();
+            }
+            int level = sc.nextInt();
+            switch (level) {
+               case  1 -> {levelDetail = DetailLevel.SHORT;
+                    isRun = false;}
+               case  2 -> {levelDetail = DetailLevel.FULL;
+                    isRun = false;}
+                default -> Logger.error("Enter not valid, please repeat");
+            }
+        } while (isRun);
+
+        do {
+            isRun = true;
             if (count == figures.length - 1) {
                 Shape[] news = new Shape[figures.length + 100];
                 for (int l = 0; l < figures.length; l++) {
@@ -24,64 +80,123 @@ public class Main {
             if (first) {
                 System.out.println("Add first figure for start:");
             } else {
-                System.out.println("Right now figure in list: " + count + "\n");
+               Logger.info("Right now figure in list: " + count + "\n");
             }
             System.out.println("1 - Circle\n2 - Rectangle\n3 - Triangle\n0 - Exit");
             while (!sc.hasNextInt()) {
-                System.out.println("Error. Enter number 0-3 :");
+                Logger.error("Enter number 0-3 :");
                 sc.next();
             }
             int num = sc.nextInt();
+            Color color = null;
             switch (num) {
                 case 1 -> {
                     System.out.println("New Circle\nEnter radius:");
                     while (!sc.hasNextDouble()) {
-                        System.out.println("Error. Enter number:");
+                        Logger.error("Enter number:");
                         sc.next();
                     }
-                    figures[count] = new Circle(sc.nextDouble());
+                    double r = sc.nextDouble();
+                    sc.nextLine();
+                    System.out.println("Radius save. Enter color:");
+                    boolean work = true;
+                    String stringColor;
+                    while (work) {
+                        for(Color c: Color.values()) {
+                            System.out.println("- " + c.getLabel());
+                        }
+                        stringColor = sc.nextLine().toUpperCase();
+                        switch (stringColor) {
+                            case "RED", "BLACK", "YELLOW", "BLUE", "GREEN" -> {
+                                color = Color.valueOf(stringColor);
+                                work = false;
+                                break;
+                            }
+                            default -> Logger.error("Enter not valid, please repeat");
+                        }
+
+                    }
+                    figures[count] = new Circle(r, color);
                     count++;
-                    System.out.println("Figure added.");
+                    Logger.info("Figure added.");
                 }
                 case 2 -> {
                     System.out.println("New Rectangle\nEnter width:");
                     while (!sc.hasNextDouble()) {
-                        System.out.println("Error. Enter number:");
+                        Logger.error("Enter number:");
                         sc.next();
                     }
                     double width = sc.nextDouble();
                     System.out.println("Enter height");
                     while (!sc.hasNextDouble()) {
-                        System.out.println("Error. Enter number:");
+                        Logger.error("Enter number:");
                         sc.next();
                     }
                     double height = sc.nextDouble();
-                    figures[count] = new Rectangle(width, height);
+                    sc.nextLine();
+                    System.out.println("Side save. Enter color:");
+                    boolean work = true;
+                    String stringColor;
+                    while (work) {
+                        for(Color c: Color.values()) {
+                            System.out.println("- " + c.getLabel());
+                        }
+                        stringColor = sc.nextLine().toUpperCase();
+                        switch (stringColor) {
+                            case "RED", "BLACK", "YELLOW", "BLUE", "GREEN" -> {
+                                color = Color.valueOf(stringColor);
+                                work = false;
+                                break;
+                            }
+                            default -> Logger.error("Enter not valid, please repeat");
+                        }
+
+                    }
+                    figures[count] = new Rectangle(width, height, color);
                     count++;
-                    System.out.println("Figure added.");
+                    Logger.info("Figure added.");
                 }
                 case 3 -> {
                     System.out.println("New Triangle\nEnter side A:");
                     while (!sc.hasNextDouble()) {
-                        System.out.println("Error. Enter number:");
+                        Logger.error("Enter number:");
                         sc.next();
                     }
                     double sideA = sc.nextDouble();
                     System.out.println("Enter side B:");
                     while (!sc.hasNextDouble()) {
-                        System.out.println("Error. Enter number:");
+                        Logger.error("Enter number:");
                         sc.next();
                     }
                     double sideB = sc.nextDouble();
                     System.out.println("Enter side C:");
                     while (!sc.hasNextDouble()) {
-                        System.out.println("Error. Enter number:");
+                        Logger.error("Enter number:");
                         sc.next();
                     }
                     double sideC = sc.nextDouble();
-                    figures[count] = new Triangle(sideA, sideB, sideC);
+                    sc.nextLine();
+                    System.out.println("Side save. Enter color:");
+                    boolean work = true;
+                    String stringColor;
+                    while (work) {
+                        for(Color c: Color.values()) {
+                            System.out.println("- " + c.getLabel());
+                        }
+                        stringColor = sc.nextLine().toUpperCase();
+                        switch (stringColor) {
+                            case "RED", "BLACK", "YELLOW", "BLUE", "GREEN" -> {
+                                color = Color.valueOf(stringColor);
+                                work = false;
+                                break;
+                            }
+                            default -> Logger.error("Enter not valid, please repeat");
+                        }
+
+                    }
+                    figures[count] = new Triangle(sideA, sideB, sideC,color);
                     count++;
-                    System.out.println("Figure added.");
+                    Logger.info("Figure added.");
                 }
                 case 0 -> {
                     isRun = false;
@@ -89,16 +204,16 @@ public class Main {
                     continue;
                 }
                 default -> {
-                    System.out.println("Number out of range. Please re-enter");
+                    Logger.error("Number out of range. Please re-enter");
                     continue;
                 }
             }
             boolean addFigure = false;
             first = false;
             do {
-                System.out.println("What do you whant?\n1 - Add figure\n2 - Calculate area\n3 - Calculate perimeter\n4 - Print Info\n5 - Print Circle\n0 - Exit");
+                System.out.println("What do you want?\n1 - Add figure\n2 - Calculate area\n3 - Calculate perimeter\n4 - Print Info\n5 - Print Circle\n6 - Print Info taking into account detail level\n7 - demoAnonymous\n8 - demoLocal\n0 - Exit");
                 while (!sc.hasNextInt()) {
-                    System.out.println("Error. Enter number 0-4 :");
+                    Logger.error("Enter number 0-8:");;
                     sc.next();
                 }
                 num = sc.nextInt();
@@ -132,12 +247,29 @@ public class Main {
                             }
 
                     }
+                    case 6 -> {
+                         {
+                             for (int i = 0; i < count; i++)
+                            System.out.println(levelDetail.format(figures[i]));
+                        }
+                    }
+                    case 7 -> {
+                        for (int i = 0; i < count; i++){
+                            demoAnonymous(figures[i]);
+                        }
+                    }
+                    case 8 -> {
+                        for (int i = 0; i < count; i++){
+                            demoLocal(figures[i]);
+                        }
+                    }
+
                     case 0 -> {
                         isRun = false;
                         addFigure = true;
                     }
                     default -> {
-                        System.out.println("Number out of range. Please re-enter");
+                        Logger.error("Number out of range. Please re-enter");
                         continue;
                     }
                 }
